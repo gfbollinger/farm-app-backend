@@ -1,20 +1,20 @@
 const express = require('express')
 const router = express.Router()
-const Crop = require('./../models/Crop')
+const Plant = require('../models/Plant')
 const { route } = require('./categories')
 const Category = require('../models/Category')
 
-// Get all crops
+// Get all plants
 router.get('/', async(req, res) => {
   try {
-    const crops = await Crop.find().populate('category')
-    res.json(crops)
+    const plants = await Plant.find().populate('category')
+    res.json(plants)
   } catch (err) {
     res.status(500).json({message: err.message})
   }
 })
 
-// Filter crops
+// Filter plants
 router.get('/filter', async(req, res) => {
   const {category, season} = req.query
   try {
@@ -28,35 +28,37 @@ router.get('/filter', async(req, res) => {
       }
     }
     if (season) query.season = season
-    const crops = await Crop.find(query).populate('category')
-    res.json(crops)
+    const plants = await Plant.find(query).populate('category')
+    res.json(plants)
   } catch (err) {
     res.status(500).json({message: err.message})
   }
 })
 
-// Get a single crop
+// Get a single plant
 router.get('/:id', async(req, res) => {
   try {
-    const crop = await Crop.findById(req.params.id).populate('category')
-    if (crop === null) {
-      return res.status(404).json({ message: 'Cannot find crop' })
+    const plant = await Plant.findById(req.params.id).populate('category')
+    if (plant === null) {
+      return res.status(404).json({ message: 'Cannot find plant' })
     }
-    res.json(crop)
+    res.json(plant)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
 })
 
-// Add Crop
+// Add Plant
 router.post('/', async(req, res) => {
-  const {name, scientificName, name_en, type, category, season,
+  const {name, description, imageUrl, scientificName, name_en, type, category, season,
     planting_date, harvest_date, growth_duration, soil_type,
     watering_frequency, sunlight, fertilizer, notes, inStock,
     pests, diseases} = req.body
 
-  const crop = new Crop({
+  const plant = new Plant({
     name,
+    description,
+    imageUrl,
     scientificName,
     name_en,
     type,
@@ -76,16 +78,16 @@ router.post('/', async(req, res) => {
   })
 
   try {
-    const newCrop = await crop.save()
-    res.status(201).json(newCrop)
+    const newPlant = await plant.save()
+    res.status(201).json(newPlant)
   } catch (err) {
     res.status(400).json({ message: err.message })
   }
 })
 
-// Update a crop
+// Update a plant
 router.patch('/:id', async (req, res) => {
-  const {name, scientificName, name_en, type, category, season,
+  const {name, description, imageUrl, scientificName, name_en, type, category, season,
     planting_date, harvest_date, growth_duration, soil_type,
     watering_frequency, sunlight, fertilizer, notes, inStock,
     pests, diseases} = req.body
@@ -99,49 +101,51 @@ router.patch('/:id', async (req, res) => {
         return res.status(404).json({ message: `Coudn't find the category`})
       }
     } */
-    const updatedCrop = await Crop.findByIdAndUpdate( req.params.id, {
+    const updatedPlant = await Plant.findByIdAndUpdate( req.params.id, {
       name,
-        scientificName,
-        name_en,
-        type,
-        //category: categoryDoc ? categoryDoc._id : undefined,
-        category: category,
-        season,
-        planting_date,
-        harvest_date,
-        growth_duration,
-        soil_type,
-        watering_frequency,
-        sunlight,
-        fertilizer,
-        notes,
-        inStock,
-        pests,
-        diseases
+      description,
+      imageUrl,
+      scientificName,
+      name_en,
+      type,
+      //category: categoryDoc ? categoryDoc._id : undefined,
+      category: category,
+      season,
+      planting_date,
+      harvest_date,
+      growth_duration,
+      soil_type,
+      watering_frequency,
+      sunlight,
+      fertilizer,
+      notes,
+      inStock,
+      pests,
+      diseases
     },
     { new: true,  runValidators: true }
   )
 
-  if(!updatedCrop){
-    return res.status(404).json({ message: 'Crop not found' })
+  if(!updatedPlant){
+    return res.status(404).json({ message: 'Plant not found' })
   }
 
-  res.json(updatedCrop)
+  res.json(updatedPlant)
 
   } catch (err){
     res.status(500).json({ message: err.message})
   }
 })
 
-// Delete crop
+// Delete plant
 router.delete('/:id', async (req, res) => {
   try {
-    const result = await Crop.deleteOne({ _id: req.params.id })
+    const result = await Plant.deleteOne({ _id: req.params.id })
 
     if (result.deletedCount === 0){
-      return res.status(404).json({ message: 'Cannot find crop' });
+      return res.status(404).json({ message: 'Cannot find plant' });
     }
-    res.json({ message: 'Crop deleted'})
+    res.json({ message: 'Plant deleted'})
   } catch {
     res.status(500).json({ message: err. message })
   }
