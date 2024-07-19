@@ -7,6 +7,7 @@ const cloudinary = require('cloudinary').v2
 const Multer = require('multer')
 const plantRoutes = require('./routes/plants')
 const categoryRoutes = require('./routes/categories')
+const plantTypeRoutes = require('./routes/plantTypes')
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(cors({
 // Routes
 app.use('/api/plants', plantRoutes)
 app.use('/api/categories', categoryRoutes)
+app.use('/api/plant-types', plantTypeRoutes)
 
 // MongoDB Connection
 mongoose.connect('mongodb://localhost:27017/farmManager')

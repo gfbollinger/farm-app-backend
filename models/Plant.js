@@ -8,6 +8,7 @@ const plantSchema = new mongoose.Schema({
   name_en: { type: String },
   type: { type: String, required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+  subcategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
   season: { type: String },
   planting_date: { type: [String], enum: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] },
   harvest_date: { type: Date },
@@ -19,7 +20,9 @@ const plantSchema = new mongoose.Schema({
   notes: String,
   inStock: { type: Boolean },
   pests: [String],
-  diseases: [String]
+  diseases: [String],
+  rating: { type: Number, min: 0, max: 10 },
+  origin: String,
 })
 
 const Plant = mongoose.model('Plant', plantSchema)

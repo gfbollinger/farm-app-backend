@@ -53,7 +53,7 @@ router.post('/', async(req, res) => {
   const {name, description, imageUrl, scientificName, name_en, type, category, season,
     planting_date, harvest_date, growth_duration, soil_type,
     watering_frequency, sunlight, fertilizer, notes, inStock,
-    pests, diseases} = req.body
+    pests, diseases, rating, origin } = req.body
 
   const plant = new Plant({
     name,
@@ -74,7 +74,9 @@ router.post('/', async(req, res) => {
     notes,
     inStock,
     pests,
-    diseases
+    diseases,
+    rating,
+    origin,
   })
 
   try {
@@ -90,7 +92,7 @@ router.patch('/:id', async (req, res) => {
   const {name, description, imageUrl, scientificName, name_en, type, category, season,
     planting_date, harvest_date, growth_duration, soil_type,
     watering_frequency, sunlight, fertilizer, notes, inStock,
-    pests, diseases} = req.body
+    pests, diseases, rating, origin} = req.body
 
   try{
     // Find the category if we have the name
@@ -121,7 +123,9 @@ router.patch('/:id', async (req, res) => {
       notes,
       inStock,
       pests,
-      diseases
+      diseases,
+      rating,
+      origin
     },
     { new: true,  runValidators: true }
   )

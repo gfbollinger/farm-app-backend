@@ -2,7 +2,12 @@ const mongoose = require('mongoose')
 
 const categorySchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  description: String
+  description: String,
+  subcategories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
+  plantType: [{
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'PlantType' },
+    name: String,
+  }]
 })
 
 const Category = mongoose.model('Category', categorySchema)
