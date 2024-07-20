@@ -112,23 +112,28 @@ router.post('/', async (req, res) => {
 // Create a new subcategory and update the parent category
 router.post('/:id/subcategories', async (req, res) => {
   const { id } = req.params
-  const { name, description, parentId } = req.body
+  const { name, description } = req.body
 
-  try{
+  try {
     // Step 1: Create the new subcategory
-    const newSubCategory = new Category({ name, description, parentId })
+    const newSubCategory = new Category({ name, description, parentId: id });
     const savedSubCategory = await newSubCategory.save()
 
     // Step 2: Update the parent to include the new subcategory
     const parentCategory = await Category.findById(id)
     if (!parentCategory) {
-      res.status(404).json({ message: `Couldn't find parent category` })
+      return res.status(404).json({ message: `Couldn't find parent category` })
     }
 
     parentCategory.subcategories.push(savedSubCategory._id)
     await parentCategory.save()
 
-    res.status(201).json(savedSubCategory)
+    // Step 3: Populate the parent category with the new subcategory details
+    const populatedParentCategory = await Category.findById(id)
+      .populate('subcategories')
+      .populate('plantType._id')
+
+    res.status(201).json(populatedParentCategory)
   } catch (err){
     res.status(400).json({ message: err.message})
   }
