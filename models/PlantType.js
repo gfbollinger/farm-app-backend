@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const plantTypeSchema = new mongoose.Schema({
-  name: String,
-  category: { type: mongoose.Types.ObjectId, ref: 'category' },
+  name: { type: String, required: true, unique: true },
+  description: String,
 })
 
 const PlantType = mongoose.model('PlantType', plantTypeSchema)

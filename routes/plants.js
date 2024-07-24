@@ -7,7 +7,7 @@ const Category = require('../models/Category')
 // Get all plants
 router.get('/', async(req, res) => {
   try {
-    const plants = await Plant.find().populate('category')
+    const plants = await Plant.find().populate('category', 'name description').populate('plantType')
     res.json(plants)
   } catch (err) {
     res.status(500).json({message: err.message})
@@ -50,7 +50,7 @@ router.get('/:id', async(req, res) => {
 
 // Add Plant
 router.post('/', async(req, res) => {
-  const {name, description, imageUrl, scientificName, name_en, type, category, season,
+  const {name, description, imageUrl, scientificName, name_en, plantType, category, subcategory, season,
     planting_date, harvest_date, growth_duration, soil_type,
     watering_frequency, sunlight, fertilizer, notes, inStock,
     pests, diseases, rating, origin } = req.body
@@ -61,8 +61,9 @@ router.post('/', async(req, res) => {
     imageUrl,
     scientificName,
     name_en,
-    type,
+    plantType,
     category,
+    subcategory,
     season,
     planting_date,
     harvest_date,
